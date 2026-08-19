@@ -14,10 +14,7 @@
 
   <main class="dashboard">
     <section class="data-strip no-print">
-      <div class="field-block compact">
-        <label>SEASON</label>
-        <select id="seasonSelect"></select>
-      </div>
+      <div class="field-block compact"><label>SEASON</label><select id="seasonSelect"></select></div>
       <div class="data-status" id="dataStatus">Select a season to load RAW DATA.</div>
     </section>
 
@@ -39,7 +36,6 @@
           <div class="field-block grow"><label>STYLE NO.</label><input id="styleSearch" list="styleList" placeholder="Enter STYLE NO." autocomplete="off" /><datalist id="styleList"></datalist></div>
           <button id="loadBtn" class="primary search-btn">SEARCH</button>
         </div>
-
         <div class="edit-form">
           <div class="edit-row"><label>STYLE / SAMPLE #</label><input data-field="style_sample_no" /></div>
           <div class="edit-row"><label>SIZE</label><input data-field="size" /></div>
@@ -53,10 +49,10 @@
           <div class="edit-row"><label>REFERENCE ONLY</label><input type="checkbox" data-field="reference_only" class="edit-check" /></div>
           <div class="edit-row"><label>TOP SAMPLE</label><input type="checkbox" data-field="top_sample" class="edit-check" /></div>
           <div class="edit-row"><label>SHIP SAMPLE</label><input type="checkbox" data-field="ship_sample" class="edit-check" /></div>
-          <div class="edit-row"><label>DESIGNER</label><input data-field="designer" /></div>
-          <div class="edit-row"><label>TD</label><input data-field="td" /></div>
           <div class="edit-row"><label>RECEIVING DATE</label><input data-field="receiving_date" type="text" value="" /></div>
           <div class="edit-row"><label>FITTING DATE</label><input data-field="fitting_date" type="text" value="" /></div>
+          <div class="edit-row"><label>DESIGNER</label><input data-field="designer" /></div>
+          <div class="edit-row"><label>TD</label><input data-field="td" /></div>
           <div class="edit-row"><label>CNFM DATE</label><input data-field="confirm_date" type="text" value="" /></div>
           <div class="edit-row"><label>STATUS</label><input data-field="status" /></div>
         </div>
@@ -67,32 +63,33 @@
           <div class="section-title">PREVIEW <span>50 mm × 90 mm</span></div>
           <div class="preview-stage">
             <article id="sampleTag" class="sample-tag">
-              <div class="tag-title">SAMPLE</div>
-              <div class="grid-row"><label>Style/Sample #</label><input data-field="style_sample_no" /></div>
-              <div class="grid-row"><label>Size</label><input data-field="size" /></div>
-              <div class="grid-row"><label>Description</label><input data-field="description" class="single-line" /></div>
-              <div class="grid-row"><label>Vendor</label><input data-field="vendor" /></div>
-              <div class="grid-row"><label>Factory</label><input data-field="factory" /></div>
-              <div class="grid-row fabric-row"><label>Fabric/Content/Weight</label><textarea data-field="fabric_info" rows="2"></textarea></div>
-              <div class="grid-row"><label>Washing/Finishing</label><input data-field="washing_finishing" /></div>
-              <div class="grid-row epattern-row"><label>E-Pattern</label><div class="yesno"><label><input type="radio" name="epattern_preview" value="YES" checked disabled /> Yes</label><label><input type="radio" name="epattern_preview" value="NO" disabled /> No</label></div></div>
-              <div class="grid-row"><label>Ship Date</label><input data-field="ship_date" type="date" /></div>
+              <div class="tag-row"><label>Style/Sample #</label><input class="fit-one" data-field="style_sample_no" /></div>
+              <div class="tag-row"><label>Size</label><input class="fit-one" data-field="size" /></div>
+              <div class="tag-row"><label>Description</label><input class="fit-one" data-field="description" /></div>
+              <div class="tag-row"><label>Vendor</label><input class="fit-one" data-field="vendor" /></div>
+              <div class="tag-row"><label>Factory</label><input class="fit-one" data-field="factory" /></div>
+              <div class="tag-row fabric-row"><label>Fabric/Content/Weight</label><textarea class="fit-two" data-field="fabric_info" rows="2"></textarea></div>
+              <div class="tag-row"><label>Washing/Finishing</label><input class="fit-one" data-field="washing_finishing" /></div>
+              <div class="tag-row epattern-row"><label>E-Pattern 전달</label><div class="epattern-value"><span id="epatternText">YES</span></div></div>
+              <div class="tag-row"><label>Ship Date</label><input class="fit-one" data-field="ship_date" type="date" /></div>
+              <div class="tag-spacer"></div>
               <div class="lower-grid">
                 <div class="sample-box">
                   <div class="sample-title">Sample</div>
                   <label><span>Reference Only</span><input type="checkbox" data-field="reference_only" /></label>
                   <label><span>TOP</span><input type="checkbox" data-field="top_sample" /></label>
-                  <label><span>Ship</span><input type="checkbox" data-field="ship_sample" /></label>
+                  <label><span>Ship (수납)</span><input type="checkbox" data-field="ship_sample" /></label>
                 </div>
                 <div class="meta-box">
-                  <div class="meta-row"><label>Receiving Date</label><input data-field="receiving_date" type="text" value="" /></div>
-                  <div class="meta-row"><label>Fitting Date</label><input data-field="fitting_date" type="text" value="" /></div>
-                  <div class="meta-row"><label>Designer</label><input data-field="designer" /></div>
-                  <div class="meta-row"><label>TD</label><input data-field="td" /></div>
-                  <div class="meta-row"><label>Cnfm Date</label><input data-field="confirm_date" type="text" value="" /></div>
+                  <div class="meta-row"><label>Receiving Date</label><input class="fit-one" data-field="receiving_date" type="text" value="" /></div>
+                  <div class="meta-row"><label>Fitting Date</label><input class="fit-one" data-field="fitting_date" type="text" value="" /></div>
+                  <div class="meta-row"><label>Designer</label><input class="fit-one" data-field="designer" /></div>
+                  <div class="meta-row"><label>TD</label><input class="fit-one" data-field="td" /></div>
+                  <div class="meta-row"><label>Cnfm Date</label><input class="fit-one" data-field="confirm_date" type="text" value="" /></div>
                 </div>
               </div>
-              <div class="status-row"><label>Status</label><input data-field="status" /></div>
+              <div class="bottom-spacer"></div>
+              <div class="status-row"><label>Status</label><input class="fit-one" data-field="status" /></div>
             </article>
           </div>
         </section>
