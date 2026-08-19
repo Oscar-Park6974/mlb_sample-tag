@@ -13,16 +13,16 @@ const uploadBtn = document.getElementById('uploadBtn');
 const uploadStatus = document.getElementById('uploadStatus');
 const sampleTag = document.getElementById('sampleTag');
 const a4PrintArea = document.getElementById('a4PrintArea');
+const epatternText = document.getElementById('epatternText');
 
-function allFields(name) {
-  return [...document.querySelectorAll(`[data-field="${name}"]`)];
-}
+function allFields(name) { return [...document.querySelectorAll(`[data-field="${name}"]`)]; }
 
 function setField(name, value) {
   allFields(name).forEach(el => {
     if (el.type === 'checkbox') el.checked = Boolean(value);
     else el.value = value ?? '';
   });
+  requestAnimationFrame(fitTagText);
 }
 
 function syncMatchingField(source) {
@@ -33,26 +33,47 @@ function syncMatchingField(source) {
     if (source.type === 'checkbox') el.checked = source.checked;
     else el.value = source.value;
   });
+  requestAnimationFrame(fitTagText);
 }
 
-document.addEventListener('input', e => {
-  if (e.target?.dataset?.field) syncMatchingField(e.target);
-});
-document.addEventListener('change', e => {
-  if (e.target?.dataset?.field) syncMatchingField(e.target);
-});
+document.addEventListener('input', e => { if (e.target?.dataset?.field) syncMatchingField(e.target); });
+document.addEventListener('change', e => { if (e.target?.dataset?.field) syncMatchingField(e.target); });
 
 function setEPattern(value) {
   const v = value || 'YES';
   const editRadio = document.querySelector(`input[name="epattern"][value="${v}"]`);
-  const previewRadio = document.querySelector(`input[name="epattern_preview"][value="${v}"]`);
   if (editRadio) editRadio.checked = true;
-  if (previewRadio) previewRadio.checked = true;
+  if (epatternText) epatternText.textContent = v;
+}
+document.querySelectorAll('input[name="epattern"]').forEach(r => r.addEventListener('change', () => setEPattern(r.value)));
+
+function fitOneLine(el) {
+  const maxPt = 7.0;
+  const minPt = 4.6;
+  let size = maxPt;
+  el.style.fontSize = `${size}pt`;
+  while (size > minPt && el.scrollWidth > el.clientWidth + 1) {
+    size -= 0.2;
+    el.style.fontSize = `${size}pt`;
+  }
 }
 
-document.querySelectorAll('input[name="epattern"]').forEach(r => {
-  r.addEventListener('change', () => setEPattern(r.value));
-});
+function fitTwoLines(el) {
+  const maxPt = 6.7;
+  const minPt = 4.5;
+  let size = maxPt;
+  el.style.fontSize = `${size}pt`;
+  while (size > minPt && (el.scrollHeight > el.clientHeight + 1 || el.scrollWidth > el.clientWidth + 1)) {
+    size -= 0.2;
+    el.style.fontSize = `${size}pt`;
+  }
+}
+
+function fitTagText(root = sampleTag) {
+  if (!root) return;
+  root.querySelectorAll('.fit-one').forEach(fitOneLine);
+  root.querySelectorAll('.fit-two').forEach(fitTwoLines);
+}
 
 function applyTag(data) {
   Object.entries(data).forEach(([key, value]) => setField(key, value));
@@ -60,22 +81,16 @@ function applyTag(data) {
   setField('fitting_date', '');
   setField('confirm_date', '');
   setEPattern(data.e_pattern || 'YES');
+  requestAnimationFrame(fitTagText);
 }
 
 async function refreshSeasons(preferred = '') {
   const response = await fetch('/api/seasons');
-  if (!response.ok) {
-    dataStatus.textContent = 'Unable to load season list.';
-    return;
-  }
+  if (!response.ok) { dataStatus.textContent = 'Unable to load season list.'; return; }
   const seasons = await response.json();
-  seasonSelect.innerHTML = seasons.length
-    ? seasons.map(s => `<option value="${s}">${s}</option>`).join('')
-    : '<option value="">NO RAW DATA</option>';
-
+  seasonSelect.innerHTML = seasons.length ? seasons.map(s => `<option value="${s}">${s}</option>`).join('') : '<option value="">NO RAW DATA</option>';
   if (preferred && seasons.includes(preferred)) seasonSelect.value = preferred;
   else if (seasons.length) seasonSelect.value = seasons[0];
-
   if (seasonSelect.value) {
     dataStatus.textContent = `${seasonSelect.value} RAW DATA ready`;
     adminSeason.value = seasonSelect.value;
@@ -90,10 +105,7 @@ async function refreshStyles(query = '') {
   const season = seasonSelect.value;
   if (!season) return;
   const response = await fetch(`/api/styles?season=${encodeURIComponent(season)}&q=${encodeURIComponent(query)}`);
-  if (!response.ok) {
-    styleList.innerHTML = '';
-    return;
-  }
+  if (!response.ok) { styleList.innerHTML = ''; return; }
   const styles = await response.json();
   styleList.innerHTML = styles.map(s => `<option value="${s}"></option>`).join('');
 }
@@ -103,40 +115,23 @@ async function loadStyle() {
   const season = seasonSelect.value;
   if (!style || !season) return;
   const response = await fetch(`/api/styles/${encodeURIComponent(style)}?season=${encodeURIComponent(season)}`);
-  if (!response.ok) {
-    alert('STYLE NO. not found in the selected season.');
-    return;
-  }
+  if (!response.ok) { alert('STYLE NO. not found in the selected season.'); return; }
   applyTag(await response.json());
 }
 
 async function uploadRawData() {
   const season = adminSeason.value.trim().toUpperCase();
   const file = rawDataFile.files[0];
-  if (!/^[0-9]{2}(SS|FW)$/.test(season)) {
-    uploadStatus.textContent = 'Enter season as 27SS or 27FW.';
-    return;
-  }
-  if (!file) {
-    uploadStatus.textContent = 'Select a RAW DATA Excel file.';
-    return;
-  }
-  if (!file.name.toLowerCase().endsWith('.xlsx')) {
-    uploadStatus.textContent = 'Only .xlsx files are supported.';
-    return;
-  }
-
+  if (!/^[0-9]{2}(SS|FW)$/.test(season)) { uploadStatus.textContent = 'Enter season as 27SS or 27FW.'; return; }
+  if (!file) { uploadStatus.textContent = 'Select a RAW DATA Excel file.'; return; }
+  if (!file.name.toLowerCase().endsWith('.xlsx')) { uploadStatus.textContent = 'Only .xlsx files are supported.'; return; }
   uploadBtn.disabled = true;
   uploadStatus.textContent = 'Uploading and validating RAW DATA...';
   const form = new FormData();
   form.append('season', season);
   form.append('file', file);
   try {
-    const response = await fetch('/api/admin/raw-data', {
-      method: 'POST',
-      headers: { 'X-Admin-Token': adminToken.value },
-      body: form
-    });
+    const response = await fetch('/api/admin/raw-data', { method: 'POST', headers: { 'X-Admin-Token': adminToken.value }, body: form });
     const result = await response.json();
     if (!response.ok) throw new Error(result.detail || 'Upload failed');
     uploadStatus.textContent = `Completed: ${season} / ${result.style_count} styles / ${result.filename}`;
@@ -145,9 +140,7 @@ async function uploadRawData() {
     await refreshSeasons(season);
   } catch (error) {
     uploadStatus.textContent = `Error: ${error.message}`;
-  } finally {
-    uploadBtn.disabled = false;
-  }
+  } finally { uploadBtn.disabled = false; }
 }
 
 function syncCloneValues(source, clone) {
@@ -157,8 +150,11 @@ function syncCloneValues(source, clone) {
     const dst = cloneFields[i];
     if (!dst) return;
     if (src.type === 'checkbox' || src.type === 'radio') dst.checked = src.checked;
-    else dst.value = src.value;
+    else { dst.value = src.value; dst.style.fontSize = src.style.fontSize; }
   });
+  const srcEP = source.querySelector('.epattern-value span');
+  const dstEP = clone.querySelector('.epattern-value span');
+  if (srcEP && dstEP) dstEP.textContent = srcEP.textContent;
 }
 
 function buildA4Copies() {
@@ -173,6 +169,7 @@ function buildA4Copies() {
 }
 
 function printCurrent() {
+  fitTagText();
   const mode = document.querySelector('input[name="printMode"]:checked')?.value || 'label';
   document.body.dataset.printMode = mode;
   if (mode === 'a4') buildA4Copies();
@@ -188,13 +185,11 @@ seasonSelect.addEventListener('change', async () => {
   dataStatus.textContent = `${seasonSelect.value} RAW DATA ready`;
   await refreshStyles();
 });
-
 let debounceTimer;
-searchInput.addEventListener('input', () => {
-  clearTimeout(debounceTimer);
-  debounceTimer = setTimeout(() => refreshStyles(searchInput.value), 150);
-});
+searchInput.addEventListener('input', () => { clearTimeout(debounceTimer); debounceTimer = setTimeout(() => refreshStyles(searchInput.value), 150); });
 searchInput.addEventListener('keydown', e => { if (e.key === 'Enter') loadStyle(); });
 loadBtn.addEventListener('click', loadStyle);
 printBtn.addEventListener('click', printCurrent);
+window.addEventListener('resize', () => requestAnimationFrame(fitTagText));
 refreshSeasons();
+requestAnimationFrame(fitTagText);
