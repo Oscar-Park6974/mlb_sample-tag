@@ -18,6 +18,12 @@ HEADER_ALIASES = {
 def normalize_header(value: object) -> str:
     return "" if value is None else " ".join(str(value).replace("\n", " ").split()).strip().upper()
 
+def normalize_color_code(value: object) -> str:
+    """Display MLB color codes as the first 5 characters only (e.g. 50BKS)."""
+    if value in (None, ""):
+        return ""
+    return str(value).strip()[:5]
+
 def excel_serial_to_date(value: object) -> str:
     if value in (None, ""): return ""
     if isinstance(value, datetime): return value.strftime("%Y-%m-%d")
@@ -59,7 +65,7 @@ class RawDataStore:
                 idx = col_map.get(field); return row[idx - 1] if idx else None
             style = str(get("style_no") or "").strip()
             if not style: continue
-            color = str(get("color_code") or "").strip()
+            color = normalize_color_code(get("color_code"))
             candidate = SampleTagData(
                 style_sample_no=style, size=default_size(style), description=color, vendor="Nobland",
                 factory=str(get("factory") or "").strip(), fabric_info=str(get("fabric_info") or "").strip(),
