@@ -36,6 +36,9 @@
           <div class="field-block grow"><label>STYLE NO.</label><input id="styleSearch" list="styleList" placeholder="Enter STYLE NO." autocomplete="off" /><datalist id="styleList"></datalist></div>
           <button id="loadBtn" class="primary search-btn">SEARCH</button>
         </div>
+        <div class="color-select-row">
+          <div class="field-block grow"><label>COLOR CODE</label><select id="colorCodeSelect" disabled><option value="">Select style first</option></select></div>
+        </div>
         <div class="edit-form">
           <div class="edit-row"><label>STYLE / SAMPLE #</label><input data-field="style_sample_no" /></div>
           <div class="edit-row"><label>SIZE</label><input data-field="size" /></div>
@@ -45,7 +48,7 @@
           <div class="edit-row tall"><label>FABRIC / CONTENT / WEIGHT</label><textarea data-field="fabric_info" rows="2"></textarea></div>
           <div class="edit-row"><label>WASHING / FINISHING</label><input data-field="washing_finishing" /></div>
           <div class="edit-row"><label>E-PATTERN</label><div class="inline-options"><label><input type="radio" name="epattern" value="YES" checked /> YES</label><label><input type="radio" name="epattern" value="NO" /> NO</label></div></div>
-          <div class="edit-row"><label>SHIP DATE</label><input data-field="ship_date" type="date" /></div>
+          <div class="edit-row"><label>SHIP DATE</label><input data-field="ship_date" type="text" /></div>
           <div class="edit-row"><label>REFERENCE ONLY</label><input type="checkbox" data-field="reference_only" class="edit-check" /></div>
           <div class="edit-row"><label>TOP SAMPLE</label><input type="checkbox" data-field="top_sample" class="edit-check" /></div>
           <div class="edit-row"><label>SHIP SAMPLE</label><input type="checkbox" data-field="ship_sample" class="edit-check" /></div>
@@ -71,7 +74,7 @@
               <div class="tag-row fabric-row"><label>Fabric/Content/Weight</label><textarea class="fit-two" data-field="fabric_info" rows="2"></textarea></div>
               <div class="tag-row"><label>Washing/Finishing</label><input class="fit-one" data-field="washing_finishing" /></div>
               <div class="tag-row epattern-row"><label>E-Pattern 전달</label><div class="epattern-value"><span id="epatternText">YES</span></div></div>
-              <div class="tag-row"><label>Ship Date</label><input class="fit-one" data-field="ship_date" type="date" /></div>
+              <div class="tag-row"><label>Ship Date</label><input class="fit-one" data-field="ship_date" type="text" /></div>
               <div class="tag-spacer"></div>
               <div class="lower-grid">
                 <div class="sample-box">
@@ -102,7 +105,6 @@
         </section>
       </div>
     </section>
-
     <section id="a4PrintArea" class="a4-print-area" aria-hidden="true"></section>
   </main>
   <script src="/static/app.js"></script>
