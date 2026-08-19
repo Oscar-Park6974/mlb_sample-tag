@@ -3,7 +3,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 from datetime import date, datetime, timedelta
 from io import BytesIO
-from typing import Dict, Iterable, List, Optional
+from typing import Dict, List, Optional
 
 from openpyxl import load_workbook
 
@@ -12,7 +12,7 @@ from app.models import SampleTagData
 
 HEADER_ALIASES = {
     "STYLE NO": "style_no",
-    "DESCRIPTION": "description",
+    "COLOR CODE": "color_code",
     "FACTORY": "factory",
     "INITIAL DELIVERY (SHIP DATE)": "ship_date",
     "FABRIC INFO": "fabric_info",
@@ -35,7 +35,6 @@ def excel_serial_to_date(value: object) -> str:
     if isinstance(value, date):
         return value.strftime("%Y-%m-%d")
     if isinstance(value, (int, float)):
-        # Excel 1900 date system; serial 1 = 1899-12-31, with leap-year compatibility adjustment.
         base = datetime(1899, 12, 30)
         try:
             return (base + timedelta(days=float(value))).strftime("%Y-%m-%d")
@@ -49,7 +48,6 @@ def default_size(style_no: str) -> str:
 
 
 def normalize_factory(value: object) -> str:
-    # RAW DATA value is intentionally preserved exactly.
     return "" if value is None else str(value).strip()
 
 
@@ -97,7 +95,7 @@ class RawDataStore:
             candidate = SampleTagData(
                 style_sample_no=style,
                 size=default_size(style),
-                description=str(get("description") or "").strip(),
+                description=str(get("color_code") or "").strip(),
                 vendor="Nobland",
                 factory=normalize_factory(get("factory")),
                 fabric_info=str(get("fabric_info") or "").strip(),
@@ -111,7 +109,6 @@ class RawDataStore:
                 store[style] = candidate
             else:
                 existing = store[style]
-                # Preserve first non-empty style-level value. Track conflicts for future UI enhancement.
                 for attr in ["description", "factory", "fabric_info", "ship_date", "designer", "td"]:
                     new_value = getattr(candidate, attr)
                     old_value = getattr(existing, attr)
