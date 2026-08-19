@@ -1,0 +1,49 @@
+:root { font-family: Arial, "Noto Sans KR", sans-serif; color: #111; }
+* { box-sizing: border-box; }
+body { margin: 0; background: #f4f6f8; }
+.shell { padding: 28px; }
+.toolbar { max-width: 850px; margin: 0 auto 20px; }
+h1 { margin: 0 0 14px; font-size: 24px; }
+.search-row { display: flex; gap: 8px; }
+.search-row input { flex: 1; min-width: 220px; padding: 10px 12px; }
+button { padding: 10px 16px; cursor: pointer; }
+.hint { margin: 8px 0 0; color: #65717d; font-size: 13px; }
+.tag-wrap { display: flex; justify-content: center; }
+.sample-tag {
+  width: 50mm;
+  height: 90mm;
+  background: #fff;
+  border: 1px solid #222;
+  padding: 2.2mm 2.4mm;
+  box-shadow: 0 8px 28px rgba(0,0,0,.12);
+  overflow: hidden;
+  font-size: 7.7pt;
+}
+.line { display: grid; grid-template-columns: 39% 61%; min-height: 5.1mm; align-items: end; border-bottom: .25mm solid #555; }
+.line label { padding: 0 1mm .65mm 0; font-weight: 600; }
+.line input, .line textarea { width: 100%; border: 0; outline: 0; padding: 0 0 .65mm 0; font: inherit; resize: none; background: transparent; }
+.line.multiline { min-height: 7.7mm; align-items: start; padding-top: .7mm; }
+.line.split { align-items: center; }
+.yesno { display: flex; justify-content: flex-end; gap: 1mm; padding-bottom: .4mm; }
+.yesno label { border: .25mm solid #444; padding: .4mm .8mm; font-weight: 400; }
+.yesno input { width: auto; margin: 0 .5mm 0 0; }
+.lower { display: grid; grid-template-columns: 38% 62%; min-height: 22mm; margin-top: 1.2mm; }
+.sample-box { border: .25mm solid #444; padding: 1mm; display: flex; flex-direction: column; justify-content: space-between; }
+.sample-title { text-align: center; font-weight: 600; }
+.sample-box label { display: flex; align-items: center; justify-content: space-between; }
+.sample-box input { width: 3.7mm; height: 3.7mm; }
+.meta-box { padding-left: 1.6mm; }
+.meta-row { display: grid; grid-template-columns: 45% 55%; align-items: end; min-height: 4.1mm; }
+.meta-row input { border: 0; border-bottom: .25mm solid #555; outline: 0; width: 100%; font: inherit; background: transparent; }
+.status-row { display: grid; grid-template-columns: 29% 71%; border: .35mm solid #b58b37; min-height: 5.5mm; align-items: center; margin-top: 1mm; }
+.status-row label { padding-left: 1mm; font-weight: 600; }
+.status-row input { border: 0; outline: 0; width: 100%; font: inherit; background: transparent; }
+
+@page { size: 50mm 90mm; margin: 0; }
+@media print {
+  html, body { width: 50mm; height: 90mm; margin: 0; padding: 0; background: #fff; }
+  .no-print { display: none !important; }
+  .shell, .tag-wrap { margin: 0; padding: 0; display: block; }
+  .sample-tag { width: 50mm; height: 90mm; border: 0; box-shadow: none; margin: 0; }
+  input, textarea { color: #000 !important; -webkit-text-fill-color: #000 !important; }
+}

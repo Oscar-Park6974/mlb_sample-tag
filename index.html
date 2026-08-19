@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>MLB Sample Tag Generator</title>
+  <link rel="stylesheet" href="/static/styles.css" />
+</head>
+<body>
+  <main class="shell">
+    <section class="toolbar no-print">
+      <h1>MLB Sample Tag Generator</h1>
+      <div class="search-row">
+        <input id="styleSearch" list="styleList" placeholder="STYLE NO 검색" autocomplete="off" />
+        <datalist id="styleList"></datalist>
+        <button id="loadBtn">불러오기</button>
+        <button id="printBtn">PRINT</button>
+      </div>
+      <p class="hint">자동 생성 후 모든 항목을 수정할 수 있습니다.</p>
+    </section>
+
+    <section class="tag-wrap">
+      <article id="sampleTag" class="sample-tag">
+        <div class="line"><label>Style/Sample #</label><input data-field="style_sample_no" /></div>
+        <div class="line"><label>Size</label><input data-field="size" /></div>
+        <div class="line multiline"><label>Description</label><textarea data-field="description" rows="2"></textarea></div>
+        <div class="line"><label>Vendor</label><input data-field="vendor" /></div>
+        <div class="line"><label>Factory</label><input data-field="factory" /></div>
+        <div class="line multiline"><label>Fabric/Content/Weight</label><textarea data-field="fabric_info" rows="2"></textarea></div>
+        <div class="line"><label>Washing/Finishing</label><input data-field="washing_finishing" /></div>
+        <div class="line split"><label>E-Pattern 전달</label><div class="yesno"><label><input type="radio" name="epattern" value="YES" checked /> Yes</label><label><input type="radio" name="epattern" value="NO" /> No</label></div></div>
+        <div class="line"><label>Ship Date</label><input data-field="ship_date" type="date" /></div>
+
+        <div class="lower">
+          <div class="sample-box">
+            <div class="sample-title">Sample</div>
+            <label>Reference Only <input type="checkbox" data-field="reference_only" /></label>
+            <label>TOP <input type="checkbox" data-field="top_sample" /></label>
+            <label>Ship (수납) <input type="checkbox" data-field="ship_sample" /></label>
+          </div>
+          <div class="meta-box">
+            <div class="meta-row"><label>Receiving Date</label><input data-field="receiving_date" type="date" /></div>
+            <div class="meta-row"><label>Fitting Date</label><input data-field="fitting_date" type="date" /></div>
+            <div class="meta-row"><label>Designer</label><input data-field="designer" /></div>
+            <div class="meta-row"><label>TD</label><input data-field="td" /></div>
+            <div class="meta-row"><label>Cnfm Date</label><input data-field="confirm_date" type="date" /></div>
+          </div>
+        </div>
+        <div class="status-row"><label>Status</label><input data-field="status" /></div>
+      </article>
+    </section>
+  </main>
+  <script src="/static/app.js"></script>
+</body>
+</html>
