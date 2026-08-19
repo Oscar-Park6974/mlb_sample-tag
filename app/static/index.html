@@ -9,7 +9,17 @@
 <body>
   <main class="shell">
     <section class="toolbar no-print">
-      <h1>MLB Sample Tag Generator</h1>
+      <div class="title-row"><h1>MLB Sample Tag Generator</h1><button id="adminToggle" class="secondary">RAW DATA 관리</button></div>
+      <div id="adminPanel" class="admin-panel hidden">
+        <h2>관리자 RAW DATA 업데이트</h2>
+        <p>새 RAW DATA Excel(.xlsx)을 업로드하면 기존 활성 RAW DATA를 교체합니다.</p>
+        <div class="admin-row">
+          <input id="adminToken" type="password" placeholder="관리자 비밀번호" autocomplete="current-password" />
+          <input id="rawDataFile" type="file" accept=".xlsx,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" />
+          <button id="uploadBtn">업로드</button>
+        </div>
+        <div id="uploadStatus" class="upload-status"></div>
+      </div>
       <div class="search-row">
         <input id="styleSearch" list="styleList" placeholder="STYLE NO 검색" autocomplete="off" />
         <datalist id="styleList"></datalist>
@@ -30,7 +40,6 @@
         <div class="line"><label>Washing/Finishing</label><input data-field="washing_finishing" /></div>
         <div class="line split"><label>E-Pattern 전달</label><div class="yesno"><label><input type="radio" name="epattern" value="YES" checked /> Yes</label><label><input type="radio" name="epattern" value="NO" /> No</label></div></div>
         <div class="line"><label>Ship Date</label><input data-field="ship_date" type="date" /></div>
-
         <div class="lower">
           <div class="sample-box">
             <div class="sample-title">Sample</div>
