@@ -8,6 +8,8 @@ const adminToken = document.getElementById('adminToken');
 const rawDataFile = document.getElementById('rawDataFile');
 const uploadBtn = document.getElementById('uploadBtn');
 const uploadStatus = document.getElementById('uploadStatus');
+const sampleTag = document.getElementById('sampleTag');
+const a4PrintArea = document.getElementById('a4PrintArea');
 
 function setField(name, value) {
   const el = document.querySelector(`[data-field="${name}"]`);
@@ -18,6 +20,9 @@ function setField(name, value) {
 
 function applyTag(data) {
   Object.entries(data).forEach(([key, value]) => setField(key, value));
+  setField('receiving_date', '');
+  setField('fitting_date', '');
+  setField('confirm_date', '');
   const ePattern = data.e_pattern || 'YES';
   const radio = document.querySelector(`input[name="epattern"][value="${ePattern}"]`);
   if (radio) radio.checked = true;
@@ -68,6 +73,36 @@ async function uploadRawData() {
   }
 }
 
+function syncCloneValues(source, clone) {
+  const srcFields = source.querySelectorAll('input, textarea');
+  const cloneFields = clone.querySelectorAll('input, textarea');
+  srcFields.forEach((src, i) => {
+    const dst = cloneFields[i];
+    if (!dst) return;
+    if (src.type === 'checkbox' || src.type === 'radio') dst.checked = src.checked;
+    else dst.value = src.value;
+  });
+}
+
+function buildA4Copies() {
+  a4PrintArea.innerHTML = '';
+  for (let i = 0; i < 6; i += 1) {
+    const clone = sampleTag.cloneNode(true);
+    clone.removeAttribute('id');
+    clone.classList.add('a4-tag');
+    syncCloneValues(sampleTag, clone);
+    a4PrintArea.appendChild(clone);
+  }
+}
+
+function printCurrent() {
+  const mode = document.querySelector('input[name="printMode"]:checked')?.value || 'label';
+  document.body.dataset.printMode = mode;
+  if (mode === 'a4') buildA4Copies();
+  window.print();
+  setTimeout(() => { delete document.body.dataset.printMode; }, 300);
+}
+
 adminToggle.addEventListener('click', () => adminPanel.classList.toggle('hidden'));
 uploadBtn.addEventListener('click', uploadRawData);
 let debounceTimer;
@@ -77,5 +112,5 @@ searchInput.addEventListener('input', () => {
 });
 searchInput.addEventListener('keydown', e => { if (e.key === 'Enter') loadStyle(); });
 loadBtn.addEventListener('click', loadStyle);
-printBtn.addEventListener('click', () => window.print());
+printBtn.addEventListener('click', printCurrent);
 refreshStyles();
