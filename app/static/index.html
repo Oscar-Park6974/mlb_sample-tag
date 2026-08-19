@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="ko">
+<html lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -7,62 +7,103 @@
   <link rel="stylesheet" href="/static/styles.css" />
 </head>
 <body>
-  <main class="shell">
-    <section class="toolbar no-print">
-      <div class="title-row"><h1>MLB Sample Tag Generator</h1><button id="adminToggle" class="secondary">RAW DATA 관리</button></div>
-      <div id="adminPanel" class="admin-panel hidden">
-        <h2>관리자 RAW DATA 업데이트</h2>
-        <p>새 RAW DATA Excel(.xlsx)을 업로드하면 기존 활성 RAW DATA를 교체합니다.</p>
-        <div class="admin-row">
-          <input id="adminToken" type="password" placeholder="관리자 비밀번호" autocomplete="current-password" />
-          <input id="rawDataFile" type="file" accept=".xlsx,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" />
-          <button id="uploadBtn">업로드</button>
-        </div>
-        <div id="uploadStatus" class="upload-status"></div>
+  <header class="topbar no-print">
+    <div class="brand">MLB SAMPLE TAG GENERATOR</div>
+    <div class="top-actions"><button id="adminToggle" class="ghost">RAW DATA MANAGEMENT</button></div>
+  </header>
+
+  <main class="dashboard">
+    <section class="data-strip no-print">
+      <div class="field-block compact">
+        <label>SEASON</label>
+        <select id="seasonSelect"></select>
       </div>
-      <div class="search-row">
-        <input id="styleSearch" list="styleList" placeholder="STYLE NO 검색" autocomplete="off" />
-        <datalist id="styleList"></datalist>
-        <button id="loadBtn">불러오기</button>
-      </div>
-      <div class="print-row">
-        <label><input type="radio" name="printMode" value="label" checked /> 라벨 스티커 50×90mm</label>
-        <label><input type="radio" name="printMode" value="a4" /> A4 6매</label>
-        <button id="printBtn">PRINT</button>
-      </div>
-      <p class="hint">자동 생성 후 모든 항목을 수정할 수 있습니다. A4 모드는 현재 태그를 6개 복제하여 인쇄합니다.</p>
+      <div class="data-status" id="dataStatus">Select a season to load RAW DATA.</div>
     </section>
 
-    <section class="tag-wrap">
-      <article id="sampleTag" class="sample-tag">
-        <div class="tag-title">SAMPLE</div>
-        <div class="grid-row"><label>Style/Sample #</label><input data-field="style_sample_no" /></div>
-        <div class="grid-row"><label>Size</label><input data-field="size" /></div>
-        <div class="grid-row"><label>Description</label><input data-field="description" class="single-line" /></div>
-        <div class="grid-row"><label>Vendor</label><input data-field="vendor" /></div>
-        <div class="grid-row"><label>Factory</label><input data-field="factory" /></div>
-        <div class="grid-row fabric-row"><label>Fabric/Content/Weight</label><textarea data-field="fabric_info" rows="2"></textarea></div>
-        <div class="grid-row"><label>Washing/Finishing</label><input data-field="washing_finishing" /></div>
-        <div class="grid-row epattern-row"><label>E-Pattern 전달</label><div class="yesno"><label><input type="radio" name="epattern" value="YES" checked /> Yes</label><label><input type="radio" name="epattern" value="NO" /> No</label></div></div>
-        <div class="grid-row"><label>Ship Date</label><input data-field="ship_date" type="date" /></div>
+    <section id="adminPanel" class="admin-panel hidden no-print">
+      <div class="admin-title">RAW DATA MANAGEMENT</div>
+      <div class="admin-grid">
+        <div class="field-block"><label>SEASON</label><input id="adminSeason" placeholder="e.g. 27SS" maxlength="4" /></div>
+        <div class="field-block"><label>ADMIN PASSWORD</label><input id="adminToken" type="password" autocomplete="current-password" /></div>
+        <div class="field-block file-field"><label>RAW DATA FILE (.XLSX)</label><input id="rawDataFile" type="file" accept=".xlsx,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" /></div>
+        <button id="uploadBtn" class="primary upload-btn">UPLOAD / REPLACE</button>
+      </div>
+      <div id="uploadStatus" class="upload-status"></div>
+    </section>
 
-        <div class="lower-grid">
-          <div class="sample-box">
-            <div class="sample-title">Sample</div>
-            <label><span>Reference Only</span><input type="checkbox" data-field="reference_only" /></label>
-            <label><span>TOP</span><input type="checkbox" data-field="top_sample" /></label>
-            <label><span>Ship (수납)</span><input type="checkbox" data-field="ship_sample" /></label>
-          </div>
-          <div class="meta-box">
-            <div class="meta-row"><label>Receiving Date</label><input data-field="receiving_date" type="text" value="" /></div>
-            <div class="meta-row"><label>Fitting Date</label><input data-field="fitting_date" type="text" value="" /></div>
-            <div class="meta-row"><label>Designer</label><input data-field="designer" /></div>
-            <div class="meta-row"><label>TD</label><input data-field="td" /></div>
-            <div class="meta-row"><label>Cnfm Date</label><input data-field="confirm_date" type="text" value="" /></div>
-          </div>
+    <section class="workspace">
+      <div class="editor-card no-print">
+        <div class="section-title">SAMPLE TAG LAYOUT EDIT</div>
+        <div class="search-grid">
+          <div class="field-block grow"><label>STYLE NO.</label><input id="styleSearch" list="styleList" placeholder="Enter STYLE NO." autocomplete="off" /><datalist id="styleList"></datalist></div>
+          <button id="loadBtn" class="primary search-btn">SEARCH</button>
         </div>
-        <div class="status-row"><label>Status</label><input data-field="status" /></div>
-      </article>
+
+        <div class="edit-form">
+          <div class="edit-row"><label>STYLE / SAMPLE #</label><input data-field="style_sample_no" /></div>
+          <div class="edit-row"><label>SIZE</label><input data-field="size" /></div>
+          <div class="edit-row"><label>DESCRIPTION</label><input data-field="description" /></div>
+          <div class="edit-row"><label>VENDOR</label><input data-field="vendor" /></div>
+          <div class="edit-row"><label>FACTORY</label><input data-field="factory" /></div>
+          <div class="edit-row tall"><label>FABRIC / CONTENT / WEIGHT</label><textarea data-field="fabric_info" rows="2"></textarea></div>
+          <div class="edit-row"><label>WASHING / FINISHING</label><input data-field="washing_finishing" /></div>
+          <div class="edit-row"><label>E-PATTERN</label><div class="inline-options"><label><input type="radio" name="epattern" value="YES" checked /> YES</label><label><input type="radio" name="epattern" value="NO" /> NO</label></div></div>
+          <div class="edit-row"><label>SHIP DATE</label><input data-field="ship_date" type="date" /></div>
+          <div class="edit-row"><label>REFERENCE ONLY</label><input type="checkbox" data-field="reference_only" class="edit-check" /></div>
+          <div class="edit-row"><label>TOP SAMPLE</label><input type="checkbox" data-field="top_sample" class="edit-check" /></div>
+          <div class="edit-row"><label>SHIP SAMPLE</label><input type="checkbox" data-field="ship_sample" class="edit-check" /></div>
+          <div class="edit-row"><label>DESIGNER</label><input data-field="designer" /></div>
+          <div class="edit-row"><label>TD</label><input data-field="td" /></div>
+          <div class="edit-row"><label>RECEIVING DATE</label><input data-field="receiving_date" type="text" value="" /></div>
+          <div class="edit-row"><label>FITTING DATE</label><input data-field="fitting_date" type="text" value="" /></div>
+          <div class="edit-row"><label>CNFM DATE</label><input data-field="confirm_date" type="text" value="" /></div>
+          <div class="edit-row"><label>STATUS</label><input data-field="status" /></div>
+        </div>
+      </div>
+
+      <div class="preview-column">
+        <section class="preview-card">
+          <div class="section-title">PREVIEW <span>50 mm × 90 mm</span></div>
+          <div class="preview-stage">
+            <article id="sampleTag" class="sample-tag">
+              <div class="tag-title">SAMPLE</div>
+              <div class="grid-row"><label>Style/Sample #</label><input data-field="style_sample_no" /></div>
+              <div class="grid-row"><label>Size</label><input data-field="size" /></div>
+              <div class="grid-row"><label>Description</label><input data-field="description" class="single-line" /></div>
+              <div class="grid-row"><label>Vendor</label><input data-field="vendor" /></div>
+              <div class="grid-row"><label>Factory</label><input data-field="factory" /></div>
+              <div class="grid-row fabric-row"><label>Fabric/Content/Weight</label><textarea data-field="fabric_info" rows="2"></textarea></div>
+              <div class="grid-row"><label>Washing/Finishing</label><input data-field="washing_finishing" /></div>
+              <div class="grid-row epattern-row"><label>E-Pattern</label><div class="yesno"><label><input type="radio" name="epattern_preview" value="YES" checked disabled /> Yes</label><label><input type="radio" name="epattern_preview" value="NO" disabled /> No</label></div></div>
+              <div class="grid-row"><label>Ship Date</label><input data-field="ship_date" type="date" /></div>
+              <div class="lower-grid">
+                <div class="sample-box">
+                  <div class="sample-title">Sample</div>
+                  <label><span>Reference Only</span><input type="checkbox" data-field="reference_only" /></label>
+                  <label><span>TOP</span><input type="checkbox" data-field="top_sample" /></label>
+                  <label><span>Ship</span><input type="checkbox" data-field="ship_sample" /></label>
+                </div>
+                <div class="meta-box">
+                  <div class="meta-row"><label>Receiving Date</label><input data-field="receiving_date" type="text" value="" /></div>
+                  <div class="meta-row"><label>Fitting Date</label><input data-field="fitting_date" type="text" value="" /></div>
+                  <div class="meta-row"><label>Designer</label><input data-field="designer" /></div>
+                  <div class="meta-row"><label>TD</label><input data-field="td" /></div>
+                  <div class="meta-row"><label>Cnfm Date</label><input data-field="confirm_date" type="text" value="" /></div>
+                </div>
+              </div>
+              <div class="status-row"><label>Status</label><input data-field="status" /></div>
+            </article>
+          </div>
+        </section>
+
+        <section class="print-card no-print">
+          <div class="section-title">PRINT OPTIONS</div>
+          <label class="print-option"><input type="radio" name="printMode" value="label" checked /><span><b>LABEL STICKER 50 × 90 mm</b><small>Print one tag at actual size</small></span></label>
+          <label class="print-option"><input type="radio" name="printMode" value="a4" /><span><b>A4 — 6 TAGS</b><small>2 columns × 3 rows</small></span></label>
+          <button id="printBtn" class="primary print-btn">PRINT</button>
+        </section>
+      </div>
     </section>
 
     <section id="a4PrintArea" class="a4-print-area" aria-hidden="true"></section>
