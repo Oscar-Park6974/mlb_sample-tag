@@ -42,7 +42,7 @@ function fitOneLine(el) {
   while (size > minPt && el.scrollWidth > el.clientWidth + 1) { size -= 0.2; el.style.fontSize = `${size}pt`; }
 }
 function fitTwoLines(el) {
-  let size = 6.7; const minPt = 4.0; el.style.fontSize = `${size}pt`;
+  let size = 5.3; const minPt = 3.6; el.style.fontSize = `${size}pt`;
   while (size > minPt && (el.scrollHeight > el.clientHeight + 1 || el.scrollWidth > el.clientWidth + 1)) { size -= 0.2; el.style.fontSize = `${size}pt`; }
 }
 function fitTagText(root = sampleTag) {
