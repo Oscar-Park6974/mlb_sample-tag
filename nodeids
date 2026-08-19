@@ -1,4 +1,0 @@
-[
-  "tests/test_rules.py::test_default_size",
-  "tests/test_rules.py::test_excel_date"
-]
